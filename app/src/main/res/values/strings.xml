@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Android Example</string>
+    <string name="greeting">Welcome to Android Development</string>
+    <string name="another">This another TextView</string>
+    <string name="onemore">This one more TextView</string>
+    <string name="change">Change</string>
+    <string name="changeBack">Change Back</string>
+</resources>
