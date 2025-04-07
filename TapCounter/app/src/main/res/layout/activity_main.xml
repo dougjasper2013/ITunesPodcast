@@ -8,12 +8,56 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/timerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/time_left_20"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="64dp" />
+
+    <TextView
+        android:id="@+id/countText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/taps_0"
+        android:textSize="32sp"
+        app:layout_constraintTop_toBottomOf="@id/timerText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/tapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_amp_tap"
+        app:layout_constraintTop_toBottomOf="@id/countText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
+        app:layout_constraintTop_toBottomOf="@id/tapButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <TextView
+        android:id="@+id/topScoresText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/top_5_scores"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/resetButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
