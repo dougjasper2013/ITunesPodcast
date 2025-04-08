@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
@@ -13,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timerText: TextView
     private lateinit var countText: TextView
     private lateinit var topScoresText: TextView
-    private lateinit var tapButton: Button
+    private lateinit var tapButton: ImageButton
     private lateinit var resetButton: Button
 
     private var tapCount = 0
