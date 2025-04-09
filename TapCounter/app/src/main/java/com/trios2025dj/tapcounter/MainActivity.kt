@@ -8,14 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-
-import android.graphics.Rect
+import android.widget.Toast
 import android.view.View
 import android.view.ViewTreeObserver
 import kotlin.random.Random
-
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var topScoresText: TextView
     private lateinit var tapButton: ImageButton
     private lateinit var resetButton: Button
+    private lateinit var resetHighScoresButton: Button
 
     private var tapCount = 0
     private var isRunning = false
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private var originalX = 0f
     private var originalY = 0f
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,19 +59,19 @@ class MainActivity : AppCompatActivity() {
         countText = findViewById(R.id.countText)
         topScoresText = findViewById(R.id.topScoresText)
         tapButton = findViewById(R.id.tapButton)
-
-         // Store original position after layout is drawn
-         tapButton.viewTreeObserver.addOnGlobalLayoutListener(
-             object : ViewTreeObserver.OnGlobalLayoutListener {
-                 override fun onGlobalLayout() {
-                     originalX = tapButton.x
-                     originalY = tapButton.y
-                     tapButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                 }
-             }
-        )
-        
         resetButton = findViewById(R.id.resetButton)
+        resetHighScoresButton = findViewById(R.id.resetHighScoresButton)
+
+        // Store original position after layout is drawn
+        tapButton.viewTreeObserver.addOnGlobalLayoutListener(
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    originalX = tapButton.x
+                    originalY = tapButton.y
+                    tapButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
 
         tapSound = MediaPlayer.create(this, R.raw.tap_sound)
         gameOverSound = MediaPlayer.create(this, R.raw.game_over)
@@ -108,7 +105,6 @@ class MainActivity : AppCompatActivity() {
             countText.text = getString(R.string.taps, tapCount)
 
             moveButtonRandomly()
-
         }
 
         resetButton.setOnClickListener {
@@ -118,11 +114,17 @@ class MainActivity : AppCompatActivity() {
             timerText.text = getString(R.string.time_left_20)
             tapButton.isEnabled = true
             isRunning = false
-                       
+
             // Move button back to original position
             tapButton.x = originalX
             tapButton.y = originalY
+        }
 
+        // Reset the high scores
+        resetHighScoresButton.setOnClickListener {
+            clearHighScores()
+            topScoresText.text = getString(R.string.top_5_scores) // Reset top scores display
+            Toast.makeText(this, getString(R.string.high_scores_cleared), Toast.LENGTH_SHORT).show()
         }
 
         displayTopScores()
@@ -163,6 +165,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun clearHighScores() {
+        // Clear the high scores list in SharedPreferences
+        val sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.remove(SCORES_KEY)  // Remove the key for stored scores
+        editor.apply()
+
+        // Clear the local list as well
+        topScores.clear()
+    }
+
     private fun moveButtonRandomly() {
         if (screenWidth == 0 || screenHeight == 0) return
 
@@ -178,7 +191,6 @@ class MainActivity : AppCompatActivity() {
         tapButton.x = randomX.toFloat()
         tapButton.y = randomY.toFloat()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
