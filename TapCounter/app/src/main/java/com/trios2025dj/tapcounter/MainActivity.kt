@@ -9,6 +9,14 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 
+import android.graphics.Rect
+import android.view.View
+import android.view.ViewTreeObserver
+import kotlin.random.Random
+
+
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var timerText: TextView
@@ -28,9 +36,27 @@ class MainActivity : AppCompatActivity() {
     private val PREFS_NAME = "HighScores"
     private val SCORES_KEY = "TopScores"
 
+    private var screenWidth = 0
+    private var screenHeight = 0
+
+
+
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Get screen size after layout is drawn
+        val mainLayout = findViewById<View>(R.id.main)
+        mainLayout.viewTreeObserver.addOnGlobalLayoutListener(
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    screenWidth = mainLayout.width
+                    screenHeight = mainLayout.height
+                    mainLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
 
         timerText = findViewById(R.id.timerText)
         countText = findViewById(R.id.countText)
@@ -68,6 +94,9 @@ class MainActivity : AppCompatActivity() {
             tapCount++
             tapSound.start()
             countText.text = getString(R.string.taps, tapCount)
+
+            moveButtonRandomly()
+
         }
 
         resetButton.setOnClickListener {
@@ -77,6 +106,11 @@ class MainActivity : AppCompatActivity() {
             timerText.text = getString(R.string.time_left_20)
             tapButton.isEnabled = true
             isRunning = false
+                       
+
+
+
+
         }
 
         displayTopScores()
@@ -116,6 +150,23 @@ class MainActivity : AppCompatActivity() {
             topScores.addAll(savedScores.split(",").map { it.toInt() })
         }
     }
+
+    private fun moveButtonRandomly() {
+        if (screenWidth == 0 || screenHeight == 0) return
+
+        val buttonWidth = tapButton.width
+        val buttonHeight = tapButton.height
+
+        val maxX = screenWidth - buttonWidth
+        val maxY = screenHeight - buttonHeight
+
+        val randomX = Random.nextInt(0, maxX)
+        val randomY = Random.nextInt(0, maxY)
+
+        tapButton.x = randomX.toFloat()
+        tapButton.y = randomY.toFloat()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
