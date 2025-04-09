@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity() {
     private var screenWidth = 0
     private var screenHeight = 0
 
-
-
+    private var originalX = 0f
+    private var originalY = 0f
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +62,18 @@ class MainActivity : AppCompatActivity() {
         countText = findViewById(R.id.countText)
         topScoresText = findViewById(R.id.topScoresText)
         tapButton = findViewById(R.id.tapButton)
+
+         // Store original position after layout is drawn
+         tapButton.viewTreeObserver.addOnGlobalLayoutListener(
+             object : ViewTreeObserver.OnGlobalLayoutListener {
+                 override fun onGlobalLayout() {
+                     originalX = tapButton.x
+                     originalY = tapButton.y
+                     tapButton.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                 }
+             }
+        )
+        
         resetButton = findViewById(R.id.resetButton)
 
         tapSound = MediaPlayer.create(this, R.raw.tap_sound)
@@ -107,9 +119,9 @@ class MainActivity : AppCompatActivity() {
             tapButton.isEnabled = true
             isRunning = false
                        
-
-
-
+            // Move button back to original position
+            tapButton.x = originalX
+            tapButton.y = originalY
 
         }
 
