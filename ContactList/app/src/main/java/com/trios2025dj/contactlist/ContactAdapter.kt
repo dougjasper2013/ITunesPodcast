@@ -6,13 +6,24 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactAdapter(private val contactList: List<Contact>) :
-    RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter(
+    private val contactList: List<Contact>,
+    private val onItemClick: (Contact) -> Unit
+) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.contact_name)
         val phoneTextView: TextView = itemView.findViewById(R.id.contact_phone)
         val emailTextView: TextView = itemView.findViewById(R.id.contact_email)
+
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(contactList[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -30,3 +41,4 @@ class ContactAdapter(private val contactList: List<Contact>) :
 
     override fun getItemCount(): Int = contactList.size
 }
+
