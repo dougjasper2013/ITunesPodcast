@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ContactList" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Set your primary color to blue -->
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorControlNormal">@color/white</item>
+
+
+        <!-- Optional: Set toolbar text appearance -->
+        <item name="toolbarStyle">@style/CustomToolbar</item>
+    </style>
+
+    <style name="Theme.ContactList" parent="Base.Theme.ContactList" />
+
+    <!-- Toolbar text color and appearance -->
+    <style name="CustomToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/blue_primary</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/white</item>
+    </style>
+
+</resources>
