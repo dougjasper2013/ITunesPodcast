@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ContactAdapter(
     private val contactList: List<Contact>,
-    private val onItemClick: (Contact) -> Unit
+    private val onItemClick: (Contact, Int) -> Unit
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -18,9 +18,9 @@ class ContactAdapter(
 
         init {
             itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemClick(contactList[position])
+                val pos = adapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onItemClick(contactList[pos], pos)
                 }
             }
         }
