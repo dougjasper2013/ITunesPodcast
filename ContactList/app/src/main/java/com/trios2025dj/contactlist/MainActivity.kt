@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        contactList.addAll(ContactStorage.loadContacts(this)) // Load saved contacts
+
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         adapter = ContactAdapter(contactList) { contact, index ->
             val intent = Intent(this, AddEditContactActivity::class.java).apply {
@@ -35,13 +37,6 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        contactList.addAll(listOf(
-            Contact("Alice", "123-456-7890", "alice@email.com"),
-            Contact("Bob", "555-555-5555", "bob@email.com")
-        ))
-
-        adapter.notifyDataSetChanged()
-
         findViewById<FloatingActionButton>(R.id.fab_add).setOnClickListener {
             val intent = Intent(this, AddEditContactActivity::class.java)
             startActivityForResult(intent, ADD_EDIT_REQUEST)
@@ -53,17 +48,16 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == ADD_EDIT_REQUEST && resultCode == RESULT_OK && data != null) {
 
-            // 🛠️ ✅ Check for deletion FIRST
             if (data.getBooleanExtra("delete", false)) {
                 val index = data.getIntExtra("index", -1)
                 if (index in contactList.indices) {
                     contactList.removeAt(index)
                     adapter.notifyItemRemoved(index)
+                    ContactStorage.saveContacts(this, contactList) // Save after delete
                 }
-                return  // ✅ Exit early since this is a delete
+                return
             }
 
-            // Continue with add/edit logic
             val name = data.getStringExtra("name") ?: return
             val phone = data.getStringExtra("phone") ?: return
             val email = data.getStringExtra("email") ?: return
@@ -79,7 +73,8 @@ class MainActivity : AppCompatActivity() {
                 contactList.add(contact)
                 adapter.notifyItemInserted(contactList.size - 1)
             }
+
+            ContactStorage.saveContacts(this, contactList) // Save after add/edit
         }
     }
-
 }
