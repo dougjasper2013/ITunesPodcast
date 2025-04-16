@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity() {
             val isEdit = data.getBooleanExtra("isEdit", false)
             val index = data.getIntExtra("index", -1)
 
-            val contact = Contact(name, phone, email)
+            val imageUri = data.getStringExtra("imageUri")
+            val contact = Contact(name, phone, email, imageUri)
+
 
             if (isEdit && index >= 0) {
                 contactList[index] = contact

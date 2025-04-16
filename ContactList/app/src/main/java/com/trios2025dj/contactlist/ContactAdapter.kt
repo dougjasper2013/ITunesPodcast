@@ -1,8 +1,10 @@
 package com.trios2025dj.contactlist
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -34,6 +36,14 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val contact = contactList[position]
+        val imageView = holder.itemView.findViewById<ImageView>(R.id.imageView)
+
+        if (!contact.imageUri.isNullOrEmpty()) {
+            imageView.setImageURI(Uri.parse(contact.imageUri))
+        } else {
+            imageView.setImageResource(R.drawable.ic_person_placeholder)
+        }
+
         holder.nameTextView.text = contact.name
         holder.phoneTextView.text = contact.phoneNumber
         holder.emailTextView.text = contact.email
