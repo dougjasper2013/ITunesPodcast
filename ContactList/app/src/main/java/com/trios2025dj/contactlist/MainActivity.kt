@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra("name", contact.name)
                 putExtra("phone", contact.phoneNumber)
                 putExtra("email", contact.email)
+                putExtra("imageUri", contact.imageUri)
                 putExtra("index", index)
             }
             startActivityForResult(intent, ADD_EDIT_REQUEST)
