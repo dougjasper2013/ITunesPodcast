@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import android.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var searchView: SearchView
+    private lateinit var originalContactList: MutableList<Contact> // To hold unfiltered list
 
     private lateinit var adapter: ContactAdapter
     private val contactList = mutableListOf<Contact>()
@@ -20,7 +24,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        contactList.addAll(ContactStorage.loadContacts(this)) // Load saved contacts
+
+        searchView = findViewById(R.id.search_view)
+
+        // Keep original list for reference
+        contactList.addAll(ContactStorage.loadContacts(this))
+        originalContactList = contactList.toMutableList()
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterContacts(newText)
+                return true
+            }
+        })
+
+
+        // contactList.addAll(ContactStorage.loadContacts(this)) // Load saved contacts
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         adapter = ContactAdapter(contactList) { contact, index ->
@@ -80,4 +103,20 @@ class MainActivity : AppCompatActivity() {
             ContactStorage.saveContacts(this, contactList) // Save after add/edit
         }
     }
+
+    private fun filterContacts(query: String?) {
+        val filtered = if (!query.isNullOrBlank()) {
+            originalContactList.filter {
+                it.name.contains(query, ignoreCase = true)
+            }
+        } else {
+            originalContactList
+        }
+
+        contactList.clear()
+        contactList.addAll(filtered)
+        adapter.notifyDataSetChanged()
+    }
+
+
 }

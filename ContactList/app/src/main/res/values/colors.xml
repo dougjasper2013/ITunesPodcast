@@ -2,5 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#FF555555</color>
     <color name="blue_primary">#2196F3</color> <!-- Material Blue 500 -->
 </resources>
