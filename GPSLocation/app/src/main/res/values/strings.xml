@@ -5,4 +5,5 @@
     <string name="gps_location">GPS Location</string>
     <string name="compass">Compass</string>
     <string name="compass_bearing_0">Compass Bearing: 0°</string>
+    <string name="compass2">Compass</string>
 </resources>

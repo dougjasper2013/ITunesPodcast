@@ -7,6 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.animation.Animation
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,9 +19,15 @@ class CompassActivity : AppCompatActivity(), SensorEventListener {
     private var rotationSensor: Sensor? = null
     private lateinit var bearingText: TextView
 
+    private lateinit var compassImage: ImageView
+    private var currentDegree = 0f
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compass)
+
+        compassImage = findViewById(R.id.compassImage)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -66,9 +74,24 @@ class CompassActivity : AppCompatActivity(), SensorEventListener {
 
             val azimuth = Math.toDegrees(orientationAngles[0].toDouble()).toFloat()
             val bearing = ((azimuth + 360) % 360).toInt()
+
             bearingText.text = "Compass Bearing: $bearing°"
+
+            // Rotate image smoothly
+            val rotateAnimation = android.view.animation.RotateAnimation(
+                currentDegree,
+                -bearing.toFloat(),
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+            )
+            rotateAnimation.duration = 250
+            rotateAnimation.fillAfter = true
+
+            compassImage.startAnimation(rotateAnimation)
+            currentDegree = -bearing.toFloat()
         }
     }
+
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 }
