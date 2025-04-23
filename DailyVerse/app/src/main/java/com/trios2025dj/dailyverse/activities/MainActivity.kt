@@ -8,6 +8,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.trios2025dj.dailyverse.R
+import com.trios2025dj.dailyverse.fragments.CategoriesFragment
+import com.trios2025dj.dailyverse.fragments.FavoritesFragment
 import com.trios2025dj.dailyverse.fragments.HomeFragment
 
 class MainActivity : AppCompatActivity() {

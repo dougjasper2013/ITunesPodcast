@@ -6,4 +6,6 @@
     <string name="home">Home</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
+    <string name="quote_text">Quote text</string>
+    <string name="author">- Author</string>
 </resources>
