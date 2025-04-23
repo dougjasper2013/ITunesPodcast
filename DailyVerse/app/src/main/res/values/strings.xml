@@ -8,4 +8,5 @@
     <string name="favorites">Favorites</string>
     <string name="quote_text">Quote text</string>
     <string name="author">- Author</string>
+    <string name="back_to_categories">← Back to Categories</string>
 </resources>
