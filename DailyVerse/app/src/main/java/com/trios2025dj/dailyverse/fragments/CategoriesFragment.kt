@@ -46,6 +46,7 @@ class CategoriesFragment : Fragment() {
     private fun showQuotesByCategory(category: String) {
         backButton.visibility = View.VISIBLE
         val quotes = QuoteRepository.getQuotesByCategory(requireContext(), category)
-        recyclerView.adapter = QuoteAdapter(quotes)
+        recyclerView.adapter = QuoteAdapter(quotes, showFavoriteButton = true)
     }
+
 }
