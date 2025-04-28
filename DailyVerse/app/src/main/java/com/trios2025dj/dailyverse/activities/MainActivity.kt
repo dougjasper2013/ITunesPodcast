@@ -11,11 +11,14 @@ import com.trios2025dj.dailyverse.R
 import com.trios2025dj.dailyverse.fragments.CategoriesFragment
 import com.trios2025dj.dailyverse.fragments.FavoritesFragment
 import com.trios2025dj.dailyverse.fragments.HomeFragment
+import com.trios2025dj.dailyverse.utils.FavoritesManager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        FavoritesManager.initialize(this)
 
         val nav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         nav.setOnItemSelectedListener {

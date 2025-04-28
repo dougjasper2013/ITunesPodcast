@@ -13,7 +13,8 @@ import com.trios2025dj.dailyverse.utils.FavoritesManager
 
 class QuoteAdapter(
     private val quotes: List<Quote>,
-    private val showFavoriteButton: Boolean
+    private val showFavoriteButton: Boolean,
+    private val onQuoteClick: ((Quote) -> Unit)? = null
 ) : RecyclerView.Adapter<QuoteAdapter.QuoteViewHolder>() {
 
     inner class QuoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -33,10 +34,14 @@ class QuoteAdapter(
         holder.quoteText.text = "\"${quote.text}\""
         holder.quoteAuthor.text = "- ${quote.author}"
 
+        holder.itemView.setOnClickListener {
+            onQuoteClick?.invoke(quotes[position])
+        }
+
         if (showFavoriteButton) {
             holder.favoriteButton.visibility = View.VISIBLE
             holder.favoriteButton.setOnClickListener {
-                FavoritesManager.addFavorite(quote)
+                FavoritesManager.addFavorite(quotes[position], holder.itemView.context)
                 Toast.makeText(holder.itemView.context, "Added to favorites!", Toast.LENGTH_SHORT).show()
             }
         } else {
