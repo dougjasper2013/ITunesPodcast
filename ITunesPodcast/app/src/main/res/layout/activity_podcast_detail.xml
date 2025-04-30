@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:contentDescription="@string/back"
+        app:srcCompat="@drawable/ic_arrow_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <!-- Podcast Artwork -->
+    <ImageView
+        android:id="@+id/imageViewDetailArtwork"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop" />
+
+    <!-- Podcast Title -->
+    <TextView
+        android:id="@+id/textViewDetailTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/podcast_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/imageViewDetailArtwork"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Podcast Artist -->
+    <TextView
+        android:id="@+id/textViewDetailArtist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/artist_name"
+        android:textSize="16sp"
+        android:textColor="#555555"
+        app:layout_constraintTop_toBottomOf="@id/textViewDetailTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- Feed URL -->
+    <TextView
+        android:id="@+id/textViewDetailFeedUrl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/feed_url"
+        android:textSize="14sp"
+        android:textColor="#007aff"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewDetailArtist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

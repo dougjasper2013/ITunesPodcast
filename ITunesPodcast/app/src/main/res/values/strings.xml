@@ -2,4 +2,8 @@
     <string name="app_name">ITunesPodcast</string>
     <string name="search_podcasts">Search Podcasts</string>
     <string name="search">Search</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="feed_url">Feed URL</string>
+    <string name="podcast_title">Podcast Title</string>
+    <string name="back">Back</string>
 </resources>

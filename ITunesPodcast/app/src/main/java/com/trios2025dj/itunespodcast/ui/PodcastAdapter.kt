@@ -1,5 +1,6 @@
 package com.trios2025dj.itunespodcast.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,8 @@ class PodcastAdapter(private var items: List<Podcast>) :
 
     override fun getItemCount() = items.size
 
+
+
     class PodcastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageArtwork: ImageView = itemView.findViewById(R.id.imageViewArtwork)
         private val textTitle: TextView = itemView.findViewById(R.id.textViewTitle)
@@ -41,6 +44,19 @@ class PodcastAdapter(private var items: List<Podcast>) :
             Glide.with(itemView.context)
                 .load(podcast.artworkUrl100)
                 .into(imageArtwork)
+
+            // ✅ Handle click
+            itemView.setOnClickListener {
+                val context = itemView.context
+                val intent = Intent(context, PodcastDetailActivity::class.java).apply {
+                    putExtra("title", podcast.collectionName)
+                    putExtra("artist", podcast.artistName)
+                    putExtra("artworkUrl", podcast.artworkUrl100)
+                    putExtra("feedUrl", podcast.feedUrl)
+                }
+                context.startActivity(intent)
+            }
         }
+
     }
 }
