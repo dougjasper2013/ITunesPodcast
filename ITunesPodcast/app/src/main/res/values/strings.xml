@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ITunesPodcast</string>
+    <string name="search_podcasts">Search Podcasts</string>
+    <string name="search">Search</string>
 </resources>
