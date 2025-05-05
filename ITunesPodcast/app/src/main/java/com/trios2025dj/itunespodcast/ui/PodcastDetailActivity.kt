@@ -119,6 +119,7 @@ class PodcastDetailActivity : AppCompatActivity() {
         var title = ""
         var pubDate = ""
         var audioUrl = ""
+        var description = ""
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             val tagName = parser.name
@@ -132,17 +133,19 @@ class PodcastDetailActivity : AppCompatActivity() {
                             tagName.equals("title", ignoreCase = true) -> title = parser.nextText()
                             tagName.equals("pubDate", ignoreCase = true) -> pubDate = parser.nextText()
                             tagName.equals("enclosure", ignoreCase = true) -> audioUrl = parser.getAttributeValue(null, "url") ?: ""
+                            tagName.equals("description", ignoreCase = true) -> description = parser.nextText()
                         }
                     }
                 }
 
                 XmlPullParser.END_TAG -> {
                     if (tagName.equals("item", ignoreCase = true)) {
-                        episodes.add(Episode(title, pubDate, audioUrl))
+                        episodes.add(Episode(title, pubDate, audioUrl, description))
                         // Reset
                         title = ""
                         pubDate = ""
                         audioUrl = ""
+                        description = ""
                         insideItem = false
                     }
                 }

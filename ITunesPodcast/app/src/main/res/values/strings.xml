@@ -9,4 +9,5 @@
     <string name="episodes">Episodes</string>
     <string name="episode_title">Episode Title</string>
     <string name="date">Date</string>
+    <string name="description">Description</string>
 </resources>

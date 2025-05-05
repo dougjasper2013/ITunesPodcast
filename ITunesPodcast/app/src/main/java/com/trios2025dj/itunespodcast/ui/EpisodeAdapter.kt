@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.trios2025dj.itunespodcast.R
 import com.trios2025dj.itunespodcast.data.Episode
@@ -13,6 +14,7 @@ class EpisodeAdapter(private val episodes: List<Episode>) : RecyclerView.Adapter
     inner class EpisodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitle: TextView = itemView.findViewById(R.id.textViewEpisodeTitle)
         val textViewDate: TextView = itemView.findViewById(R.id.textViewEpisodeDate)
+        val textViewDescription: TextView = itemView.findViewById(R.id.textViewEpisodeDescription)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
@@ -24,6 +26,7 @@ class EpisodeAdapter(private val episodes: List<Episode>) : RecyclerView.Adapter
         val episode = episodes[position]
         holder.textViewTitle.text = episode.title
         holder.textViewDate.text = episode.pubDate
+        holder.textViewDescription.text = HtmlCompat.fromHtml(episode.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
     override fun getItemCount(): Int = episodes.size
