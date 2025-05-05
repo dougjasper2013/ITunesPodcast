@@ -8,12 +8,32 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.trios2025dj.itunespodcast.R
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.trios2025dj.itunespodcast.data.Episode
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.InputStream
+import java.net.URL
 
 class PodcastDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_podcast_detail)
+
+        // Set up the Toolbar
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+// Enable the back arrow (up button)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+// Handle back arrow click
+        toolbar.setNavigationOnClickListener {
+            finish() // Acts like back button
+        }
 
         // Get views
         val imageArtwork: ImageView = findViewById(R.id.imageViewDetailArtwork)
@@ -23,16 +43,17 @@ class PodcastDetailActivity : AppCompatActivity() {
 
         // Get data from Intent
         val title = intent.getStringExtra("title") ?: ""
+        supportActionBar?.title = title
         val artist = intent.getStringExtra("artist") ?: ""
         val artworkUrl = intent.getStringExtra("artworkUrl") ?: ""
         val feedUrl = intent.getStringExtra("feedUrl") ?: ""
 
         // Get back button view
-        val buttonBack: ImageButton = findViewById(R.id.buttonBack)
+        //val buttonBack: ImageButton = findViewById(R.id.buttonBack)
 
-        buttonBack.setOnClickListener {
-            finish()
-        }
+        //buttonBack.setOnClickListener {
+        //    finish()
+        //}
 
         // Set data
         textTitle.text = title
@@ -45,7 +66,92 @@ class PodcastDetailActivity : AppCompatActivity() {
 
         // Optional: make feedUrl clickable later
 
+        val recyclerViewEpisodes: RecyclerView = findViewById(R.id.recyclerViewEpisodes)
+        recyclerViewEpisodes.layoutManager = LinearLayoutManager(this)
+
+// Get feed URL passed from intent
+        //val feedUrl = intent.getStringExtra("feedUrl")
+
+// Load episodes
+        if (!feedUrl.isNullOrEmpty()) {
+            loadEpisodes(feedUrl) { episodes ->
+                recyclerViewEpisodes.adapter = EpisodeAdapter(episodes)
+            }
+        }
+
 
 
     }
+
+    private fun loadEpisodes(feedUrl: String, callback: (List<Episode>) -> Unit) {
+        Thread {
+            try {
+                val url = URL(feedUrl)
+                val connection = url.openConnection()
+                val inputStream = connection.getInputStream()
+
+                val episodes = parseEpisodes(inputStream)
+
+                runOnUiThread {
+                    callback(episodes)
+                }
+
+                inputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    callback(emptyList())
+                }
+            }
+        }.start()
+    }
+
+
+    private fun parseEpisodes(inputStream: InputStream): List<Episode> {
+        val episodes = mutableListOf<Episode>()
+
+        val factory = XmlPullParserFactory.newInstance()
+        val parser = factory.newPullParser()
+        parser.setInput(inputStream, null)
+
+        var eventType = parser.eventType
+        var insideItem = false
+        var title = ""
+        var pubDate = ""
+        var audioUrl = ""
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            val tagName = parser.name
+
+            when (eventType) {
+                XmlPullParser.START_TAG -> {
+                    if (tagName.equals("item", ignoreCase = true)) {
+                        insideItem = true
+                    } else if (insideItem) {
+                        when {
+                            tagName.equals("title", ignoreCase = true) -> title = parser.nextText()
+                            tagName.equals("pubDate", ignoreCase = true) -> pubDate = parser.nextText()
+                            tagName.equals("enclosure", ignoreCase = true) -> audioUrl = parser.getAttributeValue(null, "url") ?: ""
+                        }
+                    }
+                }
+
+                XmlPullParser.END_TAG -> {
+                    if (tagName.equals("item", ignoreCase = true)) {
+                        episodes.add(Episode(title, pubDate, audioUrl))
+                        // Reset
+                        title = ""
+                        pubDate = ""
+                        audioUrl = ""
+                        insideItem = false
+                    }
+                }
+            }
+
+            eventType = parser.next()
+        }
+
+        return episodes
+    }
+
 }

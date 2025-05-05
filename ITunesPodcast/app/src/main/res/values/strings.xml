@@ -6,4 +6,7 @@
     <string name="feed_url">Feed URL</string>
     <string name="podcast_title">Podcast Title</string>
     <string name="back">Back</string>
+    <string name="episodes">Episodes</string>
+    <string name="episode_title">Episode Title</string>
+    <string name="date">Date</string>
 </resources>
