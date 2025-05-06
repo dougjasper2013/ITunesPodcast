@@ -13,4 +13,5 @@
     <string name="episode_detail">Episode Detail</string>
     <string name="full_description">Full Description</string>
     <string name="play">Play</string>
+    <string name="_00_00">00:00</string>
 </resources>
