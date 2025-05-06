@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trios2025dj.itunespodcast.R
 import com.trios2025dj.itunespodcast.data.Episode
 
-class EpisodeAdapter(private val episodes: List<Episode>) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
+class EpisodeAdapter(
+    private val episodes: List<Episode>,
+    private val onItemClick: (Episode) -> Unit
+) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
 
     inner class EpisodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitle: TextView = itemView.findViewById(R.id.textViewEpisodeTitle)
@@ -27,6 +30,10 @@ class EpisodeAdapter(private val episodes: List<Episode>) : RecyclerView.Adapter
         holder.textViewTitle.text = episode.title
         holder.textViewDate.text = episode.pubDate
         holder.textViewDescription.text = HtmlCompat.fromHtml(episode.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(episode)
+        }
     }
 
     override fun getItemCount(): Int = episodes.size

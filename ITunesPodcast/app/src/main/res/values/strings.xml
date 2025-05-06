@@ -10,4 +10,7 @@
     <string name="episode_title">Episode Title</string>
     <string name="date">Date</string>
     <string name="description">Description</string>
+    <string name="episode_detail">Episode Detail</string>
+    <string name="full_description">Full Description</string>
+    <string name="play">Play</string>
 </resources>

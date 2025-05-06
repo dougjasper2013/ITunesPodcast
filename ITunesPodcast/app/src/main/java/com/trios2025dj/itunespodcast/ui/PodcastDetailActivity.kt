@@ -1,5 +1,6 @@
 package com.trios2025dj.itunespodcast.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -73,9 +74,16 @@ class PodcastDetailActivity : AppCompatActivity() {
         //val feedUrl = intent.getStringExtra("feedUrl")
 
 // Load episodes
-        if (!feedUrl.isNullOrEmpty()) {
+        if (feedUrl.isNotEmpty()) {
             loadEpisodes(feedUrl) { episodes ->
-                recyclerViewEpisodes.adapter = EpisodeAdapter(episodes)
+                recyclerViewEpisodes.adapter = EpisodeAdapter(episodes) { episode ->
+                    val intent = Intent(this, EpisodeDetailActivity::class.java)
+                    intent.putExtra("title", episode.title)
+                    intent.putExtra("pubDate", episode.pubDate)
+                    intent.putExtra("description", episode.description)
+                    intent.putExtra("audioUrl", episode.audioUrl)
+                    startActivity(intent)
+                }
             }
         }
 
