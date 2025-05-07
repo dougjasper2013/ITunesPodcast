@@ -60,6 +60,10 @@ dependencies {
 
     // Lifecycle ViewModel
     implementation(libs.lifecycle.viewmodel)
+
+    implementation (libs.exoplayer.core)
+    implementation (libs.exoplayer.ui)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
