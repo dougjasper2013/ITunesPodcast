@@ -14,4 +14,8 @@
     <string name="full_description">Full Description</string>
     <string name="play">Play</string>
     <string name="_00_00">00:00</string>
+    <string name="fullscreen">Fullscreen</string>
+    <string name="fast_forward">Fast Forward</string>
+    <string name="rewind">Rewind</string>
+    <string name="play_pause">Play/Pause</string>
 </resources>
