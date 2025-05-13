@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".ui.PodcastDetailActivity" />
         <activity android:name=".ui.EpisodeDetailActivity" />
+        <activity android:name=".ui.SubscriptionsActivity" />
     </application>
 
 </manifest>

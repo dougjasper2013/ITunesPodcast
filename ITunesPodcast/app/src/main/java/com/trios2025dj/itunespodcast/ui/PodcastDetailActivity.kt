@@ -20,9 +20,23 @@ import java.net.URL
 
 class PodcastDetailActivity : AppCompatActivity() {
 
+    private lateinit var subscribeButton: Button
+    private lateinit var podcastId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_podcast_detail)
+
+        subscribeButton = findViewById(R.id.buttonSubscribe)
+
+        // Example unique podcast ID (use something stable like feed URL or collectionId)
+        podcastId = intent.getStringExtra("feedUrl") ?: return
+
+        updateSubscribeButton()
+
+        subscribeButton.setOnClickListener {
+            toggleSubscription(podcastId)
+        }
 
         // Set up the Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -163,6 +177,20 @@ class PodcastDetailActivity : AppCompatActivity() {
         }
 
         return episodes
+    }
+
+    private fun toggleSubscription(id: String) {
+        val prefs = getSharedPreferences("subscriptions", MODE_PRIVATE)
+        val isSubscribed = prefs.getBoolean(id, false)
+
+        prefs.edit().putBoolean(id, !isSubscribed).apply()
+        updateSubscribeButton()
+    }
+
+    private fun updateSubscribeButton() {
+        val prefs = getSharedPreferences("subscriptions", MODE_PRIVATE)
+        val isSubscribed = prefs.getBoolean(podcastId, false)
+        subscribeButton.text = if (isSubscribed) "Unsubscribe" else "Subscribe"
     }
 
 }

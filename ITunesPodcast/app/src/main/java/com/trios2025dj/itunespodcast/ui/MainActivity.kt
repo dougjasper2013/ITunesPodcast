@@ -1,5 +1,6 @@
 package com.trios2025dj.itunespodcast.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.trios2025dj.itunespodcast.R
 import com.trios2025dj.itunespodcast.data.ITunesApi
+import com.trios2025dj.itunespodcast.data.Podcast
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.coroutines.launch
@@ -20,10 +22,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PodcastAdapter
     private lateinit var api: ITunesApi
+    private var podcastList: MutableList<Podcast> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val subscriptionsButton = findViewById<Button>(R.id.buttonSubscriptions)
+        subscriptionsButton.setOnClickListener {
+            val intent = Intent(this, SubscriptionsActivity::class.java)
+            startActivity(intent)
+        }
 
         // Init Views
         editTextSearch = findViewById(R.id.editTextSearch)
@@ -31,7 +41,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
 
         // Setup RecyclerView
-        adapter = PodcastAdapter(emptyList())
+        adapter = PodcastAdapter(podcastList) { podcast ->
+            val intent = Intent(this, PodcastDetailActivity::class.java).apply {
+                putExtra("title", podcast.collectionName)
+                putExtra("artist", podcast.artistName)
+                putExtra("artworkUrl", podcast.artworkUrl100)
+                putExtra("feedUrl", podcast.feedUrl)
+            }
+            startActivity(intent)
+        }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
@@ -55,6 +73,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = api.searchPodcasts(query)
+                podcastList.clear()
+                podcastList.addAll(response.results)
                 adapter.updateList(response.results)
             } catch (e: Exception) {
                 e.printStackTrace()
