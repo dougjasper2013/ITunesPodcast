@@ -15,6 +15,8 @@ class PodcastAdapter(
     private val onItemClick: (Podcast) -> Unit
 ) : RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder>() {
 
+    private var podcasts: List<Podcast> = listOf()
+
     fun updateList(newItems: List<Podcast>) {
         items = newItems
         notifyDataSetChanged()
@@ -31,6 +33,17 @@ class PodcastAdapter(
     }
 
     override fun getItemCount() = items.size
+
+    fun updateData(newList: List<Podcast>) {
+        podcasts = newList
+        notifyDataSetChanged()
+    }
+
+    fun updatePodcasts(newList: List<Podcast>) {
+        podcasts = newList
+        notifyDataSetChanged()
+    }
+
 
     class PodcastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageArtwork: ImageView = itemView.findViewById(R.id.imageViewArtwork)

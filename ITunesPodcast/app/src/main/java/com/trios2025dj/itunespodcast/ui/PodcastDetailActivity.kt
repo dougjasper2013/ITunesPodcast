@@ -25,6 +25,7 @@ class PodcastDetailActivity : AppCompatActivity() {
 
     private lateinit var subscribeButton: Button
     private lateinit var podcastId: String
+    private var subscriptionChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +45,17 @@ class PodcastDetailActivity : AppCompatActivity() {
                 trackId = intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
             )
 
-            val isCurrentlySubscribed = SubscriptionManager.isSubscribed(this, podcast.trackId)
+            val isSubscribed = SubscriptionManager.isSubscribed(this, podcast.trackId)
 
-            if (isCurrentlySubscribed) {
+            if (isSubscribed) {
                 SubscriptionManager.removeSubscription(this, podcast.trackId)
-                Toast.makeText(this, "Unsubscribed!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unsubscribed", Toast.LENGTH_SHORT).show()
             } else {
                 SubscriptionManager.addSubscription(this, podcast)
-                Toast.makeText(this, "Subscribed!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Subscribed", Toast.LENGTH_SHORT).show()
             }
 
+            subscriptionChanged = true
             updateSubscribeButton()
         }
 
@@ -68,6 +70,9 @@ class PodcastDetailActivity : AppCompatActivity() {
 
 // Handle back arrow click
         toolbar.setNavigationOnClickListener {
+            if (subscriptionChanged) {
+                setResult(RESULT_OK)
+            }
             finish() // Acts like back button
         }
 
@@ -124,6 +129,20 @@ class PodcastDetailActivity : AppCompatActivity() {
 
 
 
+    }
+
+    override fun onBackPressed() {
+        if (subscriptionChanged) {
+            setResult(RESULT_OK)
+        }
+        super.onBackPressed()
+    }
+
+    override fun finish() {
+        if (subscriptionChanged) {
+            setResult(RESULT_OK)
+        }
+        super.finish()
     }
 
     private fun loadEpisodes(feedUrl: String, callback: (List<Episode>) -> Unit) {
