@@ -20,6 +20,8 @@ class SubscriptionsActivity : AppCompatActivity() {
 
         // Back button handling
         val toolbar = findViewById<MaterialToolbar>(R.id.subscriptionsToolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Subscriptions"
         toolbar.setNavigationOnClickListener { finish() }
 
         // Load subscriptions
