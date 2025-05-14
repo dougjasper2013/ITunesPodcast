@@ -1,16 +1,13 @@
 package com.trios2025dj.itunespodcast.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.trios2025dj.itunespodcast.R
-import com.trios2025dj.itunespodcast.data.Podcast
+import com.trios2025dj.itunespodcast.data.SubscriptionManager
 
 class SubscriptionsActivity : AppCompatActivity() {
 
@@ -26,7 +23,7 @@ class SubscriptionsActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { finish() }
 
         // Load subscriptions
-        val subscriptions = loadSubscribedPodcasts()
+        val subscriptions  = SubscriptionManager.getSubscriptions(this)
 
         // Log the subscriptions value
         Log.d("SubscriptionsActivity", "Subscriptions: $subscriptions")
@@ -40,17 +37,5 @@ class SubscriptionsActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun loadSubscribedPodcasts(): List<Podcast> {
-        val prefs = getSharedPreferences("subscriptions", Context.MODE_PRIVATE)
-        val jsonSet = prefs.getStringSet("podcast_list", emptySet()) ?: emptySet()
-        val gson = Gson()
 
-        return jsonSet.mapNotNull { json ->
-            try {
-                gson.fromJson(json, Podcast::class.java)
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
 }

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.trios2025dj.itunespodcast.R
@@ -13,6 +14,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.trios2025dj.itunespodcast.data.Episode
+import com.trios2025dj.itunespodcast.data.Podcast
+import com.trios2025dj.itunespodcast.data.SubscriptionManager
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
@@ -29,14 +32,23 @@ class PodcastDetailActivity : AppCompatActivity() {
 
         subscribeButton = findViewById(R.id.buttonSubscribe)
 
-        // Example unique podcast ID (use something stable like feed URL or collectionId)
-        podcastId = intent.getStringExtra("feedUrl") ?: return
-
         updateSubscribeButton()
 
         subscribeButton.setOnClickListener {
-            toggleSubscription(podcastId)
+            val podcast = Podcast(
+                collectionName = intent.getStringExtra("title") ?: "",
+                trackName = intent.getStringExtra("title") ?: "", // Use same title if needed
+                artistName = intent.getStringExtra("artist") ?: "",
+                artworkUrl100 = intent.getStringExtra("artworkUrl") ?: "",
+                feedUrl = intent.getStringExtra("feedUrl") ?: "",
+                trackId = intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
+            )
+
+            SubscriptionManager.addSubscription(this, podcast)
+            Toast.makeText(this, "Subscribed!", Toast.LENGTH_SHORT).show()
+            updateSubscribeButton()
         }
+
 
         // Set up the Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -188,8 +200,10 @@ class PodcastDetailActivity : AppCompatActivity() {
     }
 
     private fun updateSubscribeButton() {
-        val prefs = getSharedPreferences("subscriptions", MODE_PRIVATE)
-        val isSubscribed = prefs.getBoolean(podcastId, false)
+        val isSubscribed = SubscriptionManager.isSubscribed(
+            this,
+            intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
+        )
         subscribeButton.text = if (isSubscribed) "Unsubscribe" else "Subscribe"
     }
 
