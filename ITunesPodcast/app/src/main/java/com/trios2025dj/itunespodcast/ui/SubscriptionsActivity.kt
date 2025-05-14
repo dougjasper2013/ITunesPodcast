@@ -1,5 +1,6 @@
 package com.trios2025dj.itunespodcast.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,12 @@ class SubscriptionsActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewSubscriptions)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PodcastAdapter(subscriptions) { podcast ->
-            // You could open detail or do nothing — up to you
+            val intent = Intent(this, PodcastDetailActivity::class.java)
+            intent.putExtra("title", podcast.collectionName)
+            intent.putExtra("artist", podcast.artistName)
+            intent.putExtra("artworkUrl", podcast.artworkUrl100)
+            intent.putExtra("feedUrl", podcast.feedUrl)
+            startActivity(intent)
         }
         recyclerView.adapter = adapter
     }
