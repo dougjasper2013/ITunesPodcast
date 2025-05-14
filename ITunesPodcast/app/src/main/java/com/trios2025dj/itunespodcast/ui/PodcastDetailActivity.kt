@@ -37,17 +37,26 @@ class PodcastDetailActivity : AppCompatActivity() {
         subscribeButton.setOnClickListener {
             val podcast = Podcast(
                 collectionName = intent.getStringExtra("title") ?: "",
-                trackName = intent.getStringExtra("title") ?: "", // Use same title if needed
+                trackName = intent.getStringExtra("title") ?: "",
                 artistName = intent.getStringExtra("artist") ?: "",
                 artworkUrl100 = intent.getStringExtra("artworkUrl") ?: "",
                 feedUrl = intent.getStringExtra("feedUrl") ?: "",
                 trackId = intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
             )
 
-            SubscriptionManager.addSubscription(this, podcast)
-            Toast.makeText(this, "Subscribed!", Toast.LENGTH_SHORT).show()
+            val isCurrentlySubscribed = SubscriptionManager.isSubscribed(this, podcast.trackId)
+
+            if (isCurrentlySubscribed) {
+                SubscriptionManager.removeSubscription(this, podcast.trackId)
+                Toast.makeText(this, "Unsubscribed!", Toast.LENGTH_SHORT).show()
+            } else {
+                SubscriptionManager.addSubscription(this, podcast)
+                Toast.makeText(this, "Subscribed!", Toast.LENGTH_SHORT).show()
+            }
+
             updateSubscribeButton()
         }
+
 
 
         // Set up the Toolbar
