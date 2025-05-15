@@ -1,6 +1,7 @@
 package com.trios2025dj.itunespodcast.data
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.trios2025dj.itunespodcast.data.Podcast
@@ -12,22 +13,34 @@ object SubscriptionManager {
 
     fun getSubscriptions(context: Context): List<Podcast> {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val json = prefs.getString(KEY_SUBSCRIPTIONS, "[]") ?: "[]"
-        val type = object : TypeToken<List<Podcast>>() {}.type
-        return gson.fromJson(json, type)
-    }
-
-    fun addSubscription(context: Context, podcast: Podcast) {
-        val current = getSubscriptions(context).toMutableList()
-        if (current.none { it.trackId == podcast.trackId }) {
-            current.add(podcast)
-            saveSubscriptions(context, current)
+        val json = prefs.getString(KEY_SUBSCRIPTIONS, null)
+        Log.d("SubscriptionManager", "getSubscriptions() called: $json")
+        return if (json != null) {
+            val type = object : TypeToken<List<Podcast>>() {}.type
+            Gson().fromJson(json, type)
+        } else {
+            emptyList()
         }
     }
 
-    fun removeSubscription(context: Context, podcastId: Long) {
-        val updated = getSubscriptions(context).filter { it.trackId != podcastId }
-        saveSubscriptions(context, updated)
+    fun addSubscription(context: Context, podcast: Podcast) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val gson = Gson()
+        val subscriptions = getSubscriptions(context).toMutableList()
+        if (!subscriptions.any { it.trackId == podcast.trackId }) {
+            subscriptions.add(podcast)
+            prefs.edit().putString(KEY_SUBSCRIPTIONS, gson.toJson(subscriptions)).apply()
+            Log.d("SubscriptionManager", "Added subscription: ${podcast.trackId}")
+        }
+    }
+
+    fun removeSubscription(context: Context, trackId: Long) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val gson = Gson()
+        val subscriptions = getSubscriptions(context).toMutableList()
+        val removed = subscriptions.removeAll { it.trackId == trackId }
+        prefs.edit().putString(KEY_SUBSCRIPTIONS, gson.toJson(subscriptions)).apply()
+        Log.d("SubscriptionManager", "Removed subscription $trackId: success=$removed")
     }
 
     fun isSubscribed(context: Context, podcastId: Long): Boolean {

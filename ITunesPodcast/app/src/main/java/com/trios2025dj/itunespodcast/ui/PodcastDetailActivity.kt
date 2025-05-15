@@ -2,6 +2,7 @@ package com.trios2025dj.itunespodcast.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -38,21 +39,22 @@ class PodcastDetailActivity : AppCompatActivity() {
         subscribeButton.setOnClickListener {
             val podcast = Podcast(
                 collectionName = intent.getStringExtra("title") ?: "",
-                trackName = intent.getStringExtra("title") ?: "",
                 artistName = intent.getStringExtra("artist") ?: "",
                 artworkUrl100 = intent.getStringExtra("artworkUrl") ?: "",
                 feedUrl = intent.getStringExtra("feedUrl") ?: "",
-                trackId = intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
+                trackId = intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L,
+                trackName = intent.getStringExtra("title") ?: ""
             )
 
             val isSubscribed = SubscriptionManager.isSubscribed(this, podcast.trackId)
+            Log.d("PodcastDetail", "Before toggle: isSubscribed=$isSubscribed")
 
             if (isSubscribed) {
                 SubscriptionManager.removeSubscription(this, podcast.trackId)
-                Toast.makeText(this, "Unsubscribed", Toast.LENGTH_SHORT).show()
+                Log.d("PodcastDetail", "Removed subscription for ${podcast.trackId}")
             } else {
                 SubscriptionManager.addSubscription(this, podcast)
-                Toast.makeText(this, "Subscribed", Toast.LENGTH_SHORT).show()
+                Log.d("PodcastDetail", "Added subscription for ${podcast.trackId}")
             }
 
             subscriptionChanged = true
@@ -139,8 +141,10 @@ class PodcastDetailActivity : AppCompatActivity() {
     }
 
     override fun finish() {
+        Log.d("PodcastDetail", "finish() called - subscriptionChanged=$subscriptionChanged")
         if (subscriptionChanged) {
             setResult(RESULT_OK)
+            Log.d("PodcastDetail", "Result set to RESULT_OK")
         }
         super.finish()
     }
@@ -232,7 +236,9 @@ class PodcastDetailActivity : AppCompatActivity() {
             this,
             intent.getStringExtra("feedUrl")?.hashCode()?.toLong() ?: 0L
         )
+        Log.d("PodcastDetail", "Update button: isSubscribed=$isSubscribed")
         subscribeButton.text = if (isSubscribed) "Unsubscribe" else "Subscribe"
     }
+
 
 }

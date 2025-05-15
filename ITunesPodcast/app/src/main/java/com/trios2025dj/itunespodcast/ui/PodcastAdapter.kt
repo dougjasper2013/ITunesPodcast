@@ -1,5 +1,6 @@
 package com.trios2025dj.itunespodcast.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class PodcastAdapter(
     }
 
     fun updatePodcasts(newList: List<Podcast>) {
+        Log.d("PodcastAdapter", "Updating podcasts: ${newList.size} items")
         podcasts = newList
         notifyDataSetChanged()
     }
